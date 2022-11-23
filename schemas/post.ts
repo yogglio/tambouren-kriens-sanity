@@ -1,7 +1,7 @@
-import { BookIcon } from '@sanity/icons'
-import { defineType } from 'sanity'
+import { BookIcon } from "@sanity/icons";
+import { defineType } from "sanity";
 
-import authorType from './author'
+import authorType from "./author";
 
 /**
  * This file is the schema definition for a post.
@@ -16,67 +16,84 @@ import authorType from './author'
  */
 
 export default defineType({
-  name: 'post',
-  title: 'Post',
+  name: "post",
+  title: "Post",
   icon: BookIcon,
-  type: 'document',
+  type: "document",
   fields: [
     {
-      name: 'title',
-      title: 'Title',
-      type: 'string',
+      name: "title",
+      title: "Title",
+      type: "string",
       validation: (Rule) => Rule.required(),
     },
     {
-      name: 'slug',
-      title: 'Slug',
-      type: 'slug',
+      name: "slug",
+      title: "Slug",
+      type: "slug",
       options: {
-        source: 'title',
+        source: "title",
         maxLength: 96,
       },
       validation: (Rule) => Rule.required(),
     },
     {
-      name: 'content',
-      title: 'Content',
-      type: 'array',
-      of: [{ type: 'block' }],
+      name: "content",
+      title: "Content",
+      type: "array",
+      of: [
+        {
+          name: "textBlock",
+          title: "Text Block",
+          type: "object",
+          fields: [
+            {
+              name: "textBlockItem",
+              title: "Block",
+              type: "array",
+              of: [{ type: "block" }],
+            },
+          ],
+        },
+        {
+          type: "image",
+        },
+      ],
     },
     {
-      name: 'excerpt',
-      title: 'Excerpt',
-      type: 'text',
+      name: "excerpt",
+      title: "Excerpt",
+      type: "text",
     },
     {
-      name: 'coverImage',
-      title: 'Cover Image',
-      type: 'image',
+      name: "coverImage",
+      title: "Cover Image",
+      type: "image",
       options: {
         hotspot: true,
       },
     },
     {
-      name: 'date',
-      title: 'Date',
-      type: 'datetime',
+      name: "date",
+      title: "Date",
+      type: "datetime",
     },
     {
-      name: 'author',
-      title: 'Author',
-      type: 'reference',
+      name: "author",
+      title: "Author",
+      type: "reference",
       to: [{ type: authorType.name }],
     },
   ],
   preview: {
     select: {
-      title: 'title',
-      author: 'author.name',
-      media: 'coverImage',
+      title: "title",
+      author: "author.name",
+      media: "coverImage",
     },
     prepare(selection) {
-      const { author } = selection
-      return { ...selection, subtitle: author && `by ${author}` }
+      const { author } = selection;
+      return { ...selection, subtitle: author && `by ${author}` };
     },
   },
-})
+});
