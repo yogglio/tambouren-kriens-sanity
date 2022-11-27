@@ -14,7 +14,7 @@ export default function IndexPage(props: {
 }) {
   const { preview, loading, posts, settings } = props;
   const [heroPost, ...morePosts] = posts;
-  const { title = "Blog." } = settings;
+  const title = settings?.title || "Title";
 
   return (
     <>

@@ -38,6 +38,19 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     },
     {
+      name: "excerpt",
+      title: "Excerpt",
+      type: "text",
+    },
+    {
+      name: "coverImage",
+      title: "Cover Image",
+      type: "image",
+      options: {
+        hotspot: true,
+      },
+    },
+    {
       name: "content",
       title: "Content",
       type: "array",
@@ -59,19 +72,6 @@ export default defineType({
           type: "image",
         },
       ],
-    },
-    {
-      name: "excerpt",
-      title: "Excerpt",
-      type: "text",
-    },
-    {
-      name: "coverImage",
-      title: "Cover Image",
-      type: "image",
-      options: {
-        hotspot: true,
-      },
     },
     {
       name: "date",

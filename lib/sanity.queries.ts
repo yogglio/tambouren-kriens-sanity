@@ -1,5 +1,39 @@
-import { groq } from 'next-sanity'
+import { groq } from "next-sanity";
 
+// Settings
+export const settingsQuery = groq`*[_type == "settings"][0]{title}`;
+
+// Page
+const pageFields = groq`
+  _id,
+  title,
+  excerpt,
+  "slug": slug.current,
+`;
+
+export const pageQuery = groq`
+{
+  "page": *[_type == "page" && slug.current == $slug] | order(_updatedAt desc) [0] {
+    content,
+    ${pageFields}
+  },
+  "morePages": *[_type == "page" && slug.current != $slug] | order(date desc, _updatedAt desc) [0...2] {
+    content,
+    ${pageFields}
+  }
+}`;
+
+export const pageSlugsQuery = groq`
+*[_type == "page" && defined(slug.current)][].slug.current
+`;
+
+export const pageBySlugQuery = groq`
+*[_type == "page" && slug.current == $slug][0] {
+  ${pageFields}
+}
+`;
+
+// Post
 const postFields = groq`
   _id,
   title,
@@ -8,14 +42,12 @@ const postFields = groq`
   coverImage,
   "slug": slug.current,
   "author": author->{name, picture},
-`
-
-export const settingsQuery = groq`*[_type == "settings"][0]{title}`
+`;
 
 export const indexQuery = groq`
 *[_type == "post"] | order(date desc, _updatedAt desc) {
   ${postFields}
-}`
+}`;
 
 export const postQuery = groq`
 {
@@ -27,34 +59,42 @@ export const postQuery = groq`
     content,
     ${postFields}
   }
-}`
+}`;
 
 export const postSlugsQuery = groq`
 *[_type == "post" && defined(slug.current)][].slug.current
-`
+`;
 
 export const postBySlugQuery = groq`
 *[_type == "post" && slug.current == $slug][0] {
   ${postFields}
 }
-`
+`;
 
 export interface Author {
-  name?: string
-  picture?: any
+  name?: string;
+  picture?: any;
 }
 
 export interface Post {
-  _id: string
-  title?: string
-  coverImage?: any
-  date?: string
-  excerpt?: string
-  author?: Author
-  slug?: string
-  content?: any
+  _id: string;
+  title?: string;
+  coverImage?: any;
+  date?: string;
+  excerpt?: string;
+  author?: Author;
+  slug?: string;
+  content?: any;
 }
 
 export interface Settings {
-  title?: string
+  title?: string;
+}
+
+export interface Page {
+  _id: string;
+  title?: string;
+  excerpt?: string;
+  slug?: string;
+  content?: any;
 }

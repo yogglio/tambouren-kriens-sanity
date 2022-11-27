@@ -4,19 +4,21 @@
 // It's part of the Studio's “Structure Builder API” and is documented here:
 // https://www.sanity.io/docs/structure-builder-reference
 
-import { DefaultDocumentNodeResolver } from 'sanity/desk'
-import authorType from 'schemas/author'
-import postType from 'schemas/post'
+import { DefaultDocumentNodeResolver } from "sanity/desk";
+import authorType from "schemas/author";
+import pageType from "schemas/page";
+import postType from "schemas/post";
 
-import AuthorAvatarPreviewPane from './AuthorAvatarPreviewPane'
-import PostPreviewPane from './PostPreviewPane'
+import AuthorAvatarPreviewPane from "./AuthorAvatarPreviewPane";
+import PagePreviewPane from "./PagePreviewPane";
+import PostPreviewPane from "./PostPreviewPane";
 
 export const previewDocumentNode = ({
   apiVersion,
   previewSecretId,
 }: {
-  apiVersion: string
-  previewSecretId: `${string}.${string}`
+  apiVersion: string;
+  previewSecretId: `${string}.${string}`;
 }): DefaultDocumentNodeResolver => {
   return (S, { schemaType }) => {
     switch (schemaType) {
@@ -30,8 +32,8 @@ export const previewDocumentNode = ({
                 picture={document.displayed.picture as any}
               />
             ))
-            .title('Preview'),
-        ])
+            .title("Preview"),
+        ]);
 
       case postType.name:
         return S.document().views([
@@ -44,11 +46,25 @@ export const previewDocumentNode = ({
                 previewSecretId={previewSecretId}
               />
             ))
-            .title('Preview'),
-        ])
+            .title("Preview"),
+        ]);
+
+      case pageType.name:
+        return S.document().views([
+          S.view.form(),
+          S.view
+            .component(({ document }) => (
+              <PagePreviewPane
+                slug={document.displayed.slug?.current || ""}
+                apiVersion={apiVersion}
+                previewSecretId={previewSecretId}
+              />
+            ))
+            .title("Preview"),
+        ]);
 
       default:
-        return null
+        return null;
     }
-  }
-}
+  };
+};
