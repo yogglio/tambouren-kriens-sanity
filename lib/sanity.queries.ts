@@ -11,24 +11,13 @@ const pageFields = groq`
   "slug": slug.current,
 `;
 
-export const pageQuery = groq`
-{
-  "page": *[_type == "page" && slug.current == $slug] | order(_updatedAt desc) [0] {
-    content,
-    ${pageFields}
-  },
-  "morePages": *[_type == "page" && slug.current != $slug] | order(date desc, _updatedAt desc) [0...2] {
-    content,
-    ${pageFields}
-  }
-}`;
-
 export const pageSlugsQuery = groq`
 *[_type == "page" && defined(slug.current)][].slug.current
 `;
 
 export const pageBySlugQuery = groq`
 *[_type == "page" && slug.current == $slug][0] {
+  content,
   ${pageFields}
 }
 `;

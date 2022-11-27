@@ -57,12 +57,11 @@ export default defineType({
       of: [
         {
           name: "textBlock",
-          title: "Text Block",
+          title: "Text",
           type: "object",
           fields: [
             {
               name: "textBlockItem",
-              title: "Block",
               type: "array",
               of: [{ type: "block" }],
             },
