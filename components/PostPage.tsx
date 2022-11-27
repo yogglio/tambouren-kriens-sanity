@@ -1,33 +1,33 @@
-import Container from 'components/BlogContainer'
-import BlogHeader from 'components/BlogHeader'
-import Layout from 'components/BlogLayout'
-import MoreStories from 'components/MoreStories'
-import PostBody from 'components/PostBody'
-import PostHeader from 'components/PostHeader'
-import PostTitle from 'components/PostTitle'
-import SectionSeparator from 'components/SectionSeparator'
-import { urlForImage } from 'lib/sanity.image'
-import type { Post, Settings } from 'lib/sanity.queries'
-import ErrorPage from 'next/error'
-import Head from 'next/head'
-import { useRouter } from 'next/router'
+import Container from "components/BlogContainer";
+import BlogHeader from "components/BlogHeader";
+import Layout from "components/BlogLayout";
+import MoreStories from "components/MoreStories";
+import PostBody from "components/PostBody";
+import PostHeader from "components/PostHeader";
+import PostTitle from "components/PostTitle";
+import SectionSeparator from "components/SectionSeparator";
+import { urlForImage } from "lib/sanity.image";
+import type { Post, Settings } from "lib/sanity.queries";
+import ErrorPage from "next/error";
+import Head from "next/head";
+import { useRouter } from "next/router";
 
 export default function PostPage(props: {
-  preview?: boolean
-  loading?: boolean
-  data: { post: Post; morePosts: Post[] }
-  settings: Settings
+  preview?: boolean;
+  loading?: boolean;
+  data: { post: Post; morePosts: Post[] };
+  settings: Settings;
 }) {
-  const { preview, loading, data, settings } = props
-  const { post = {} as any, morePosts = [] } = data || {}
-  const { title = 'Blog.' } = settings || {}
+  const { preview, loading, data, settings } = props;
+  const { post = {} as any, morePosts = [] } = data || {};
+  const { title = "Blog." } = settings || {};
 
-  const router = useRouter()
+  const router = useRouter();
 
-  const slug = post?.slug
+  const slug = post?.slug;
 
   if (!router.isFallback && !slug && !preview) {
-    return <ErrorPage statusCode={404} />
+    return <ErrorPage statusCode={404} />;
   }
 
   return (
@@ -48,7 +48,7 @@ export default function PostPage(props: {
                     content={urlForImage(post.coverImage)
                       .width(1200)
                       .height(627)
-                      .fit('crop')
+                      .fit("crop")
                       .url()}
                   />
                 )}
@@ -67,5 +67,5 @@ export default function PostPage(props: {
         )}
       </Container>
     </Layout>
-  )
+  );
 }

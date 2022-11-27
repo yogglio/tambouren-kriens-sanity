@@ -1,13 +1,13 @@
-import Avatar from 'components/AuthorAvatar'
-import CoverImage from 'components/CoverImage'
-import Date from 'components/PostDate'
-import PostTitle from 'components/PostTitle'
-import type { Post } from 'lib/sanity.queries'
+import Avatar from "components/AuthorAvatar";
+import CoverImage from "components/CoverImage";
+import Date from "components/PostDate";
+import PostTitle from "components/PostTitle";
+import type { Post } from "lib/sanity.queries";
 
 export default function PostHeader(
-  props: Pick<Post, 'title' | 'coverImage' | 'date' | 'author' | 'slug'>
+  props: Pick<Post, "title" | "coverImage" | "date" | "author" | "slug">
 ) {
-  const { title, coverImage, date, author, slug } = props
+  const { title, coverImage, date, author, slug } = props;
   return (
     <>
       <PostTitle>{title}</PostTitle>
@@ -26,5 +26,5 @@ export default function PostHeader(
         </div>
       </div>
     </>
-  )
+  );
 }

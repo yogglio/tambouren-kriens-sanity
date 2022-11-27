@@ -20,12 +20,12 @@
  * 14. Redeploy with `npx vercel --prod` to apply the new environment variable
  */
 
-import { apiVersion, dataset, projectId } from 'lib/sanity.api'
-import type { NextApiRequest, NextApiResponse } from 'next'
-import { type SanityClient, createClient, groq } from 'next-sanity'
-import { type ParseBody, parseBody } from 'next-sanity/webhook'
+import { apiVersion, dataset, projectId } from "lib/sanity.api";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { type SanityClient, createClient, groq } from "next-sanity";
+import { type ParseBody, parseBody } from "next-sanity/webhook";
 
-export { config } from 'next-sanity/webhook'
+export { config } from "next-sanity/webhook";
 
 export default async function revalidate(
   req: NextApiRequest,
@@ -35,59 +35,64 @@ export default async function revalidate(
     const { body, isValidSignature } = await parseBody(
       req,
       process.env.SANITY_REVALIDATE_SECRET
-    )
+    );
     if (isValidSignature === false) {
-      const message = 'Invalid signature'
-      console.log(message)
-      return res.status(401).send(message)
+      const message = "Invalid signature";
+      console.log(message);
+      return res.status(401).send(message);
     }
 
-    const { _id, _type } = body
-    if (typeof _id !== 'string' || !_id) {
-      const invalidId = 'Invalid _id'
-      console.error(invalidId, { body })
-      return res.status(400).send(invalidId)
+    const { _id, _type } = body;
+    if (typeof _id !== "string" || !_id) {
+      const invalidId = "Invalid _id";
+      console.error(invalidId, { body });
+      return res.status(400).send(invalidId);
     }
 
-    const staleRoutes = await queryStaleRoutes({ _id, _type })
-    await Promise.all(staleRoutes.map((route) => res.revalidate(route)))
+    const staleRoutes = await queryStaleRoutes({ _id, _type });
+    await Promise.all(staleRoutes.map((route) => res.revalidate(route)));
 
-    const updatedRoutes = `Updated routes: ${staleRoutes.join(', ')}`
-    console.log(updatedRoutes)
-    return res.status(200).send(updatedRoutes)
+    const updatedRoutes = `Updated routes: ${staleRoutes.join(", ")}`;
+    console.log(updatedRoutes);
+    return res.status(200).send(updatedRoutes);
   } catch (err) {
-    console.error(err)
-    return res.status(500).send(err.message)
+    console.error(err);
+    return res.status(500).send(err.message);
   }
 }
 
-type StaleRoute = '/' | `/posts/${string}`
+type StaleRoute = "/" | `/posts/${string}`;
 
 async function queryStaleRoutes(
-  body: Pick<ParseBody['body'], '_type' | '_id'>
+  body: Pick<ParseBody["body"], "_type" | "_id">
 ): Promise<StaleRoute[]> {
-  const client = createClient({ projectId, dataset, apiVersion, useCdn: false })
+  const client = createClient({
+    projectId,
+    dataset,
+    apiVersion,
+    useCdn: false,
+  });
 
   switch (body._type) {
-    case 'author':
-      return await queryStaleAuthorRoutes(client, body._id)
-    case 'post':
-      return await queryStalePostRoutes(client, body._id)
-    case 'settings':
-      return await queryAllRoutes(client)
+    case "author":
+      return await queryStaleAuthorRoutes(client, body._id);
+    case "post":
+      return await queryStalePostRoutes(client, body._id);
+    case "settings":
+      return await queryAllRoutes(client);
     default:
-      throw new TypeError(`Unknown type: ${body._type}`)
+      throw new TypeError(`Unknown type: ${body._type}`);
   }
 }
 
 async function _queryAllRoutes(client: SanityClient): Promise<string[]> {
-  return await client.fetch(groq`*[_type == "post"].slug.current`)
+  return await client.fetch(groq`*[_type == "post"].slug.current`);
 }
 
 async function queryAllRoutes(client: SanityClient): Promise<StaleRoute[]> {
-  const slugs = await _queryAllRoutes(client)
+  const slugs = await _queryAllRoutes(client);
 
-  return ['/', ...slugs.map((slug) => `/posts/${slug}` as StaleRoute)]
+  return ["/", ...slugs.map((slug) => `/posts/${slug}` as StaleRoute)];
 }
 
 async function mergeWithMoreStories(
@@ -96,13 +101,13 @@ async function mergeWithMoreStories(
 ): Promise<string[]> {
   const moreStories = await client.fetch(
     groq`*[_type == "post"] | order(date desc, _updatedAt desc) [0...3].slug.current`
-  )
+  );
   if (slugs.some((slug) => moreStories.includes(slug))) {
-    const allSlugs = await _queryAllRoutes(client)
-    return [...new Set([...slugs, ...allSlugs])]
+    const allSlugs = await _queryAllRoutes(client);
+    return [...new Set([...slugs, ...allSlugs])];
   }
 
-  return slugs
+  return slugs;
 }
 
 async function queryStaleAuthorRoutes(
@@ -114,14 +119,14 @@ async function queryStaleAuthorRoutes(
     "slug": *[_type == "post" && references(^._id)].slug.current
   }["slug"][]`,
     { id }
-  )
+  );
 
   if (slugs.length > 0) {
-    slugs = await mergeWithMoreStories(client, slugs)
-    return ['/', ...slugs.map((slug) => `/posts/${slug}`)]
+    slugs = await mergeWithMoreStories(client, slugs);
+    return ["/", ...slugs.map((slug) => `/posts/${slug}`)];
   }
 
-  return []
+  return [];
 }
 
 async function queryStalePostRoutes(
@@ -131,9 +136,9 @@ async function queryStalePostRoutes(
   let slugs = await client.fetch(
     groq`*[_type == "post" && _id == $id].slug.current`,
     { id }
-  )
+  );
 
-  slugs = await mergeWithMoreStories(client, slugs)
+  slugs = await mergeWithMoreStories(client, slugs);
 
-  return ['/', ...slugs.map((slug) => `/posts/${slug}`)]
+  return ["/", ...slugs.map((slug) => `/posts/${slug}`)];
 }

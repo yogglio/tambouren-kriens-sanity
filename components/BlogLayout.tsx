@@ -1,15 +1,15 @@
-import AlertBanner from 'components/AlertBanner'
-import BlogMeta from 'components/BlogMeta'
-import Head from 'next/head'
+import AlertBanner from "components/AlertBanner";
+import BlogMeta from "components/BlogMeta";
+import Head from "next/head";
 
 export default function BlogLayout({
   preview,
   loading,
   children,
 }: {
-  preview: boolean
-  loading?: boolean
-  children: React.ReactNode
+  preview: boolean;
+  loading?: boolean;
+  children: React.ReactNode;
 }) {
   return (
     <>
@@ -26,5 +26,5 @@ export default function BlogLayout({
         <main>{children}</main>
       </div>
     </>
-  )
+  );
 }

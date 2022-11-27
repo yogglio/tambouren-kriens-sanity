@@ -1,11 +1,11 @@
-import Link from 'next/link'
+import Link from "next/link";
 
 export default function BlogHeader({
   title,
   level,
 }: {
-  title: string
-  level: 1 | 2
+  title: string;
+  level: 1 | 2;
 }) {
   switch (level) {
     case 1:
@@ -15,14 +15,14 @@ export default function BlogHeader({
             {title}
           </h1>
           <h4 className="mt-5 text-center text-lg md:pl-8 md:text-left">
-            A statically generated blog example using{' '}
+            A statically generated blog example using{" "}
             <a
               href="https://nextjs.org/"
               className="underline transition-colors duration-200 hover:text-success"
             >
               Next.js
-            </a>{' '}
-            and{' '}
+            </a>{" "}
+            and{" "}
             <a
               href="https://sanity.io/"
               className="underline transition-colors duration-200 hover:text-success"
@@ -32,7 +32,7 @@ export default function BlogHeader({
             .
           </h4>
         </header>
-      )
+      );
 
     case 2:
       return (
@@ -43,13 +43,13 @@ export default function BlogHeader({
             </Link>
           </h2>
         </header>
-      )
+      );
 
     default:
       throw new Error(
         `Invalid level: ${
           JSON.stringify(level) || typeof level
         }, only 1 or 2 are allowed`
-      )
+      );
   }
 }
