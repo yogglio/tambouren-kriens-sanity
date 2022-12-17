@@ -1,8 +1,11 @@
 /** @type {import('next').NextConfig} */
 const config = {
-  // @TODO turn swcMinify back on once the agressive dead code elimination bug that causes
+  // @TODO turn swcMinify back on once the agressive dead code elimination bug that casues
   // `ReferenceError: FieldPresenceWithOverlay is not defined` is fixed
   swcMinify: false,
+  experimental: {
+    appDir: true,
+  },
 
   images: {
     remotePatterns: [

@@ -1,20 +1,17 @@
 import Container from "components/BlogContainer";
 import BlogHeader from "components/BlogHeader";
 import Layout from "components/BlogLayout";
-import HeroPost from "components/HeroPost";
-import MoreStories from "components/MoreStories";
-import type { Page, Post, Settings } from "lib/sanity.queries";
+import type { Page, Settings } from "lib/sanity.queries";
 import Head from "next/head";
 
 export default function PagePage(props: {
   preview?: boolean;
   loading?: boolean;
-  page: Page;
+  data: Page;
   settings: Settings;
 }) {
-  const { preview, loading, page, settings } = props;
+  const { preview, loading, data, settings } = props;
   const title = settings?.title || "Set a Title";
-  console.log(page);
 
   return (
     <>
@@ -24,7 +21,7 @@ export default function PagePage(props: {
         </Head>
         <Container>
           <BlogHeader title={title} level={1} />
-          <div>{page?.title}</div>
+          <div>{data?.title}</div>
         </Container>
       </Layout>
     </>

@@ -8,8 +8,8 @@ import {
 } from "lib/sanity.queries";
 
 export default function PreviewPagePage({ token }: { token: null | string }) {
-  const page: Page = usePreview(token, indexQuery) || [];
+  const data: Page = usePreview(token, indexQuery) || [];
   const settings: Settings = usePreview(token, settingsQuery) || {};
 
-  return <PagePage preview page={page} settings={settings} />;
+  return <PagePage preview data={data} settings={settings} />;
 }

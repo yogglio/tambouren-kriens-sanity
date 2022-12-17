@@ -56,6 +56,7 @@ export const postSlugsQuery = groq`
 
 export const postBySlugQuery = groq`
 *[_type == "post" && slug.current == $slug][0] {
+  content,
   ${postFields}
 }
 `;
@@ -78,6 +79,10 @@ export interface Post {
 
 export interface Settings {
   title?: string;
+  description?: any[];
+  ogImage?: {
+    title?: string;
+  };
 }
 
 export interface Page {
